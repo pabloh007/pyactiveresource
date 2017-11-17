@@ -20,6 +20,7 @@ setup(name='pyactiveresource',
       test_suite='test',
       install_requires=[
           'six',
+          'requests'
       ],
       tests_require=[
           python_dateutils_version,
@@ -37,7 +38,7 @@ setup(name='pyactiveresource',
                    'Programming Language :: Python :: 3',
                    'Programming Language :: Python :: 3.3',
                    'Programming Language :: Python :: 3.4',
-                   'Topic :: Software Development', 
+                   'Topic :: Software Development',
                    'Topic :: Software Development :: Libraries',
                    'Topic :: Software Development :: Libraries :: Python Modules']
     )

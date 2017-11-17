@@ -124,11 +124,11 @@ class Request(urllib.request.Request):
 
 
 def _urllib_has_timeout():
-  """Determines if our version of urllib.request.urlopen has a timeout argument."""
-  # NOTE: This is a terrible hack, but there's no other indication that this
-  #     argument was added to the function.
-  version = sys.version_info
-  return version[0] >= 2 and version[1] >= 6
+    """Determines if our version of urllib.request.urlopen has a timeout argument."""
+    # NOTE: This is a terrible hack, but there's no other indication that this
+    #     argument was added to the function.
+    version = sys.version_info
+    return version[0] >= 2 and version[1] >= 6
 
 
 class Response(object):
@@ -190,7 +190,7 @@ class Connection(object):
 
     def __init__(self, site, user=None, password=None, timeout=None,
                  format=formats.JSONFormat):
-    
+
         """Initialize a new Connection object.
 
         Args:
@@ -272,9 +272,9 @@ class Connection(object):
             request.data = data
             self.log.debug('request-body:%s', request.data)
         elif method in ['POST', 'PUT']:
-          # Some web servers need a content length on all POST/PUT operations
-          request.add_header('Content-Type', self.format.mime_type)
-          request.add_header('Content-Length', '0')
+            # Some web servers need a content length on all POST/PUT operations
+            request.add_header('Content-Type', self.format.mime_type)
+            request.add_header('Content-Length', '0')
 
         if self.timeout and not _urllib_has_timeout():
             # Hack around lack of timeout option in python < 2.6
@@ -313,9 +313,9 @@ class Connection(object):
             urllib.error.URLError on IO errors.
         """
         if _urllib_has_timeout():
-          return urllib.request.urlopen(request, timeout=self.timeout)
+            return urllib.request.urlopen(request, timeout=self.timeout)
         else:
-          return urllib.request.urlopen(request)
+            return urllib.request.urlopen(request)
 
     def get(self, path, headers=None):
         """Perform an HTTP get request.
@@ -326,7 +326,8 @@ class Connection(object):
         Returns:
             A dictionary representing a resource.
         """
-        return self.format.decode(self._open('GET', path, headers=headers).body)
+        return self.format.decode(
+            self._open('GET', path, headers=headers).body)
 
     def delete(self, path, headers=None):
         """Perform an HTTP delete request.

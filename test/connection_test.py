@@ -25,7 +25,7 @@ class ConnectionTest(unittest.TestCase):
         matz = {'id': 1, 'name': 'Matz'}
         david = {'id': 2, 'name': 'David'}
         self.matz  = util.to_json(matz, root='person')
-        self.david = util.to_json(david, root='person') 
+        self.david = util.to_json(david, root='person')
         self.people = util.to_json([matz, david], root='people')
         self.people_single = util.to_json(
             [matz], root='people-single-elements')
@@ -41,12 +41,12 @@ class ConnectionTest(unittest.TestCase):
 
         self.header = {'Key': 'value'}
         self.connection = connection.Connection(self.http.site)
-    
+
     def assert_response_raises(self, error, code):
         response = urllib.error.HTTPError('', code, '', {}, BytesIO(b''))
         self.http.set_response(response)
         self.assertRaises(error, self.connection._open, '', '')
-      
+
     def test_handle_bad_request(self):
         # 400 is a bad request (e.g. malformed URI or missing request parameter)
         self.assert_response_raises(connection.BadRequest, 400)
@@ -56,7 +56,7 @@ class ConnectionTest(unittest.TestCase):
         for code in [200, 299, 300, 399]:
             response = http_fake.FakeResponse(code, str(code))
             self.http.set_response(response)
-            self.assertEquals(self.connection._open('', ''),
+            self.assertEqual(self.connection._open('', ''),
                               connection.Response(code, str(code).encode('utf-8')))
 
     def test_handle_unauthorized_access(self):
@@ -130,19 +130,19 @@ class ConnectionTest(unittest.TestCase):
             'GET', '/people/2.json', self.header, self.david)
         david = self.connection.get('/people/2.json', self.header)
         self.assertEqual(david['name'], 'David')
-  
+
     def test_get_collection(self):
         self.http.respond_to('GET', '/people.json', {}, self.people)
         people = self.connection.get('/people.json')
         self.assertEqual('Matz', people[0]['name'])
         self.assertEqual('David', people[1]['name'])
-    
+
     def test_get_collection_single(self):
         self.http.respond_to('GET', '/people_single_elements.json', {},
                              self.people_single)
         people = self.connection.get('/people_single_elements.json')
         self.assertEqual('Matz', people[0]['name'])
-    
+
     def test_get_collection_empty(self):
         self.http.respond_to('GET', '/people_empty_elements.json', {},
                              self.people_empty)
@@ -183,19 +183,19 @@ class ConnectionTest(unittest.TestCase):
                              self.zero_length_content_headers, '', 204)
         response = self.connection.put('/people/1.json')
         self.assertEqual(204, response.code)
-  
+
     def test_put_with_header(self):
         header = self.header
         header.update(self.zero_length_content_headers)
         self.http.respond_to('PUT', '/people/2.json', header, '', 204)
         response = self.connection.put('/people/2.json', self.header)
         self.assertEqual(204, response.code)
-  
+
     def test_delete(self):
         self.http.respond_to('DELETE', '/people/1.json', {}, '')
         response = self.connection.delete('/people/1.json')
         self.assertEqual(200, response.code)
-  
+
     def test_delete_with_header(self):
         self.http.respond_to('DELETE', '/people/2.json', self.header, '')
         response = self.connection.delete('/people/2.json', self.header)

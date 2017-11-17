@@ -219,12 +219,12 @@ class ActiveResourceTest(unittest.TestCase):
 
     def test_find_class_for_should_create_classes(self):
         found = activeresource.ActiveResource._find_class_for('NotARealClass')
-        self.assert_(issubclass(found, activeresource.ActiveResource))
+        self.assertTrue(issubclass(found, activeresource.ActiveResource))
 
     def test_find_class_for_should_not_create_classes(self):
         found = activeresource.ActiveResource._find_class_for(
             'NotARealClass', create_missing=False)
-        self.assert_(found is None)
+        self.assertTrue(found is None)
 
     def test_set_prefix_source(self):
         self.http.respond_to(
@@ -436,37 +436,37 @@ class ActiveResourceTest(unittest.TestCase):
     def test_user_variable_can_be_reset(self):
         class Actor(activeresource.ActiveResource): pass
         Actor.site = 'http://cinema'
-        #self.assert_(Actor.user is None)
+        #self.assertTrue(Actor.user is None)
         Actor.user = 'username'
         Actor.user = None
-        self.assert_(Actor.user is None)
+        self.assertTrue(Actor.user is None)
         self.assertFalse(Actor.connection.user)
 
     def test_password_variable_can_be_reset(self):
         class Actor(activeresource.ActiveResource): pass
         Actor.site = 'http://cinema'
-        self.assert_(Actor.password is None)
+        self.assertTrue(Actor.password is None)
         Actor.password = 'password'
         Actor.password = None
-        self.assert_(Actor.password is None)
+        self.assertTrue(Actor.password is None)
         self.assertFalse(Actor.connection.password)
 
     def test_format_variable_can_by_reset(self):
         class Actor(activeresource.ActiveResource): pass
         Actor.site = 'http://cinema'
         Actor.format = None
-        self.assert_(Actor.connection.format is None)
+        self.assertTrue(Actor.connection.format is None)
         Actor.format = object()
         self.assertEqual(Actor.format, Actor.connection.format)
 
     def test_timeout_variable_can_be_reset(self):
         class Actor(activeresource.ActiveResource): pass
         Actor.site = 'http://cinema'
-        self.assert_(Actor.timeout is None)
+        self.assertTrue(Actor.timeout is None)
         Actor.timeout = 5
         Actor.timeout = None
-        self.assert_(Actor.timeout is None)
-        self.assert_(Actor.connection.timeout is None)
+        self.assertTrue(Actor.timeout is None)
+        self.assertTrue(Actor.connection.timeout is None)
 
     def test_credentials_from_site_are_decoded(self):
         class Actor(activeresource.ActiveResource): pass
@@ -501,34 +501,34 @@ class ActiveResourceTest(unittest.TestCase):
     def test_updating_superclass_site_resets_descendent_connection(self):
         class Actor(self.person): pass
 
-        self.assert_(self.person.connection is Actor.connection)
+        self.assertTrue(self.person.connection is Actor.connection)
 
         self.person.site = 'http://another-site'
-        self.assert_(self.person.connection is Actor.connection)
+        self.assertTrue(self.person.connection is Actor.connection)
 
     def test_updating_superclass_user_resets_descendent_connection(self):
         class Actor(self.person): pass
 
-        self.assert_(self.person.connection is Actor.connection)
+        self.assertTrue(self.person.connection is Actor.connection)
 
         self.person.user = 'username'
-        self.assert_(self.person.connection is Actor.connection)
+        self.assertTrue(self.person.connection is Actor.connection)
 
     def test_updating_superclass_password_resets_descendent_connection(self):
         class Actor(self.person): pass
 
-        self.assert_(self.person.connection is Actor.connection)
+        self.assertTrue(self.person.connection is Actor.connection)
 
         self.person.password = 'password'
-        self.assert_(self.person.connection is Actor.connection)
+        self.assertTrue(self.person.connection is Actor.connection)
 
     def test_updating_superclass_timeout_resets_descendent_connection(self):
         class Actor(self.person): pass
 
-        self.assert_(self.person.connection is Actor.connection)
+        self.assertTrue(self.person.connection is Actor.connection)
 
         self.person.timeout = 10
-        self.assert_(self.person.connection is Actor.connection)
+        self.assertTrue(self.person.connection is Actor.connection)
 
     def test_custom_primary_key(self):
         class User(self.person):
@@ -541,7 +541,7 @@ class ActiveResourceTest(unittest.TestCase):
         self.assertEqual('bob', user.id)
         self.assertEqual('bob', user.username)
         self.assertEqual('bob', user.attributes['username'])
-        self.assert_('id' not in user.attributes)
+        self.assertTrue('id' not in user.attributes)
 
     def test_repeated_attribute_modification_updates_attributes_dict(self):
         res = activeresource.ActiveResource()
@@ -595,7 +595,7 @@ class ActiveResourceTest(unittest.TestCase):
     def test_to_xml_should_handle_dasherize_option(self):
         res = activeresource.ActiveResource({'attr_name': 'value'})
         xml = res.to_xml(dasherize=False)
-        self.assert_(b'<attr_name>value</attr_name>' in xml)
+        self.assertTrue(b'<attr_name>value</attr_name>' in xml)
 
     def test_same_attributes_should_share_the_same_hash(self):
         a = self.person({'name': 'foo', 'id': 1})
