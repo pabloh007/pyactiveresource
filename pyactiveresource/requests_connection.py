@@ -110,3 +110,53 @@ class Connection(object):
             timeout: socket timeout.
             format: format object for en/decoding resource data.
         """
+        if site is None:
+            raise ValueError("Connection site argument requires site")
+        self.site, self.user, self.password = self._parse_site(site)
+        self.user = user or self.user or ''
+        self.password = password or self.password or ''
+
+        if self.user or self.password:
+            self.auth = base64.b64encode(('%s:%s' % (self.user, self.password)).encode('utf-8')).decode('utf-8')
+        else:
+            self.auth = None
+
+    def _parse_site(self, site):
+        """Retrieve the auth information and base url for a site.
+
+        Args:
+            site: The URL to parse.
+        Returns:
+            A tuple containing (site, username, password).
+        """
+        parts = urllib.parse.urlparse(site)
+
+        host = parts.hostname
+        if parts.port:
+            host += ":" + str(parts.port)
+
+        new_site = urllib.parse.urlunparse((parts.scheme, host, '', '', '', ''))
+        return (new_site, parts.username, parts.password)
+    def _request(self, url):
+        """Return a new request object.
+
+        Args:
+            url: The url to connect to.
+        Returns:
+            A Request object.
+        """
+        return Request(url)
+
+    def _open(self, method, path, headers=None, data=None):
+        """Perform an HTTP request.
+
+        Args:
+            method: The HTTP method (GET, PUT, POST, DELETE).
+            path: The HTTP path to retrieve.
+            headers: A dictionary of HTTP headers to add.
+            data: The data to send as the body of the request.
+        Returns:
+             A Response object.
+        """
+        self.log.info(self.site, path)
+        request
